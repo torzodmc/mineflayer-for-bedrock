@@ -4,18 +4,20 @@
 
 Create powerful, autonomous Minecraft Bedrock bots with a familiar, high-level API. If you've used [Mineflayer](https://github.com/PrismarineJS/mineflayer) for Java Edition, you'll feel right at home.
 
+Still under development, theres a lot of stuff that needs to be added, not yet published too. May have a lot of bugs, i am still testing it.
+
 ---
 
 ## Features
 
-- 🎮 **21 built-in plugins** — chat, entities, inventory, combat, digging, placing, pathfinding, recipes, and more
-- 🗺️ **Full world state** — chunk parsing with SubChunk palette deserialization, `blockAt()` lookups
-- 🧭 **A\* Pathfinding** — built-in pathfinder with 5 goal types (GoalBlock, GoalNear, GoalXZ, GoalFollow, GoalInvert)
-- 📦 **Block & Item Registry** — 1,100 blocks + 1,599 items via `minecraft-data`, with name/hardness/stackSize lookups
-- 🛠️ **Recipe System** — auto-parsed from server `crafting_data` packets (2,500+ recipes)
-- ⚙️ **Physics Engine** — gravity, AABB collision, PlayerAuthInput tick loop
-- 🔌 **Plugin System** — load/unload custom plugins at runtime
-- 🎯 **Mineflayer-compatible events** — `spawn`, `chat`, `health`, `death`, `blockUpdate`, `entitySpawn`, etc.
+-  **21 built-in plugins** — chat, entities, inventory, combat, digging, placing, pathfinding, recipes, and more
+-  **Full world state** — chunk parsing with SubChunk palette deserialization, `blockAt()` lookups
+-  **A\* Pathfinding** — built-in pathfinder with 5 goal types (GoalBlock, GoalNear, GoalXZ, GoalFollow, GoalInvert)
+-  **Block & Item Registry** — 1,100 blocks + 1,599 items via `minecraft-data`, with name/hardness/stackSize lookups
+-  **Recipe System** — auto-parsed from server `crafting_data` packets (2,500+ recipes)
+-  **Physics Engine** — gravity, AABB collision, PlayerAuthInput tick loop
+-  **Plugin System** — load/unload custom plugins at runtime
+-  **Mineflayer-compatible events** — `spawn`, `chat`, `health`, `death`, `blockUpdate`, `entitySpawn`, etc.
 
 ---
 
