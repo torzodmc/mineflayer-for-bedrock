@@ -1,0 +1,37 @@
+{
+  "name": "bedrockflayer",
+  "version": "0.1.0",
+  "description": "A high-level Mineflayer-like bot framework for Minecraft Bedrock Edition",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "example": "node examples/basic_bot.js"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "mineflayer",
+    "bot",
+    "mcbe",
+    "bedrock-protocol"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bedrock-protocol": "^3.0.0",
+    "prismarine-registry": "^1.7.0",
+    "prismarine-item": "^1.14.0",
+    "prismarine-block": "^1.17.0",
+    "prismarine-chunk": "^1.35.0",
+    "prismarine-world": "^3.7.0",
+    "prismarine-chat": "^1.10.0",
+    "vec3": "^0.1.10"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.0"
+  },
+  "peerDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
