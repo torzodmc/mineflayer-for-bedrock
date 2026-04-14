@@ -105,5 +105,9 @@ module.exports = {
     GoalXZ: pathfinderPlugin.GoalXZ,
     GoalFollow: pathfinderPlugin.GoalFollow,
     GoalInvert: pathfinderPlugin.GoalInvert,
+    // Ecosystem plugins (opt-in — load via bot.loadPlugin())
+    autoEat: require('./lib/plugins/auto_eat'),
+    collectBlock: require('./lib/plugins/collect_block'),
+    guard: require('./lib/plugins/guard'),
     version
 }

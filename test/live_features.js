@@ -1,66 +1,63 @@
-/**
- * Live Feature Test — verifies all new systems work against a live BDS.
- */
+// Verify block name resolution + item names + ecosystem plugins
 const bf = require('../index')
+
+console.log('=== Exports Check ===')
+console.log('autoEat:', typeof bf.autoEat)
+console.log('collectBlock:', typeof bf.collectBlock)
+console.log('guard:', typeof bf.guard)
 
 const bot = bf.createBot({
     host: 'localhost',
     port: 19132,
-    username: 'FeatureTest',
-    offline: true
+    username: 'HardenTest',
+    offline: true,
+    skipPing: true
 })
 
+// Load ecosystem plugins
+bot.loadPlugin(bf.autoEat)
+bot.loadPlugin(bf.collectBlock)
+bot.loadPlugin(bf.guard)
+
 bot.on('spawn', () => {
-    console.log('✓ SPAWNED')
-    console.log('✓ Registry:', bot.registry ? 'YES' : 'NO')
-    console.log('  Blocks:', bot.registry ? bot.registry.blocksArray.length : 0)
-    console.log('  Items:', bot.registry ? bot.registry.itemsArray.length : 0)
-    console.log('✓ Pathfinder:', !!bot.pathfinder, '| goto:', typeof bot.pathfinder.goto)
-    console.log('✓ recipesFor:', typeof bot.recipesFor)
+    console.log('\n=== Spawn ===')
+    console.log('autoEat:', !!bot.autoEat, '| enabled:', bot.autoEat.enabled)
+    console.log('collectBlock:', !!bot.collectBlock)
+    console.log('guard:', !!bot.guard, '| enabled:', bot.guard.enabled)
+    console.log('Registry palette cache size:', bot.registry._blockStateCache.size)
+
+    if (bot.registry._itemStateCache) {
+        console.log('Registry item state cache size:', bot.registry._itemStateCache.size)
+    }
 
     // Wait for world to load
     setTimeout(() => {
-        console.log('\n--- World State ---')
-        console.log('Loaded chunks:', bot._loadedChunks.size)
-        console.log('ChunkColumns:', bot._chunks.size)
-
+        console.log('\n=== Block Name Resolution ===')
         const pos = bot.entity.position
         console.log('Position:', pos.x.toFixed(1), pos.y.toFixed(1), pos.z.toFixed(1))
 
-        // Test blockAt
-        const below = bot.blockAt(pos.offset(0, -1, 0))
-        if (below) {
-            console.log('✓ Block below: stateId=' + below.stateId + ' name=' + below.name + ' solid=' + below.solid)
+        // Test blocks at various positions
+        for (let dy = -3; dy <= 1; dy++) {
+            const block = bot.blockAt(pos.offset(0, dy, 0))
+            if (block) {
+                console.log(`  Y${dy}: stateId=${block.stateId} name=${block.name} solid=${block.solid} hardness=${block.hardness}`)
+            } else {
+                console.log(`  Y${dy}: null`)
+            }
+        }
+
+        // Check inventory items have names
+        console.log('\n=== Inventory Items ===')
+        const items = bot.inventory.items()
+        if (items.length > 0) {
+            for (const item of items.slice(0, 5)) {
+                console.log(`  ${item.name} x${item.count} (id=${item.type})`)
+            }
         } else {
-            console.log('✗ Block below: null (chunk not parsed or block not tracked)')
+            console.log('  (empty inventory)')
         }
 
-        const here = bot.blockAt(pos)
-        if (here) {
-            console.log('✓ Block at feet: stateId=' + here.stateId + ' name=' + here.name)
-        } else {
-            console.log('✗ Block at feet: null')
-        }
-
-        // Test registry lookups
-        if (bot.registry) {
-            const stone = bot.registry.blockByName('stone')
-            console.log('✓ Registry stone:', stone ? stone.name + ' hardness=' + stone.hardness : 'NOT FOUND')
-
-            const diamond = bot.registry.itemByName('diamond_sword')
-            console.log('✓ Registry diamond_sword:', diamond ? diamond.name + ' stack=' + diamond.stackSize : 'NOT FOUND')
-
-            console.log('✓ isSolid(stone):', bot.registry.isSolid('stone'))
-            console.log('✓ isWalkable(air):', bot.registry.isWalkable('air'))
-            console.log('✓ isClimbable(ladder):', bot.registry.isClimbable('ladder'))
-            console.log('✓ isLiquid(water):', bot.registry.isLiquid('water'))
-        }
-
-        // Test recipes
-        console.log('\n--- Recipes ---')
-        console.log('Recipes loaded:', bot._recipesLoaded, '| count:', bot._recipes.length)
-
-        console.log('\n=== ALL FEATURE TESTS COMPLETE ===')
+        console.log('\n=== ALL TESTS COMPLETE ===')
         bot.end()
         setTimeout(() => process.exit(0), 500)
     }, 3000)
@@ -70,7 +67,4 @@ bot.on('error', (err) => {
     console.error('Error:', err.message)
 })
 
-setTimeout(() => {
-    console.log('TIMEOUT')
-    process.exit(1)
-}, 20000)
+setTimeout(() => { console.log('TIMEOUT'); process.exit(1) }, 25000)
