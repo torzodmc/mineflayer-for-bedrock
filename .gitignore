@@ -1,5 +1,4 @@
 node_modules/
-package-lock.json
 test/sg_keys.json
 test/start_game_data.json
 test/chunk_data.json
