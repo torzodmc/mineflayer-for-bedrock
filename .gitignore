@@ -6,3 +6,5 @@ test/deep_dump.md
 test/packet_dump.md
 docs/README.md
 .gemini/
+.claude/
+old_reviews/

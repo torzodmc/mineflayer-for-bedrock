@@ -10,7 +10,7 @@ Still under development, theres a lot of stuff that needs to be added, not yet p
 
 ## Features
 
--  **21 built-in plugins** — chat, entities, inventory, combat, digging, placing, pathfinding, recipes, and more
+-  **23 plugins** — 20 built-in auto-loaded + 3 opt-in ecosystem plugins (auto_eat, collect_block, guard)
 -  **Full world state** — chunk parsing with SubChunk palette deserialization, `blockAt()` lookups
 -  **A\* Pathfinding** — built-in pathfinder with 5 goal types (GoalBlock, GoalNear, GoalXZ, GoalFollow, GoalInvert)
 -  **Block & Item Registry** — 1,100 blocks + 1,599 items via `minecraft-data`, with name/hardness/stackSize lookups
@@ -133,7 +133,7 @@ bot.on('spawn', () => {
 ├─────────────────────────────────────┤
 │       lib/bot.js (BedrockBot)       │  EventEmitter, connection, state
 ├─────────────────────────────────────┤
-│       lib/plugins/*.js (21 plugins) │  Modular feature system
+│       lib/plugins/*.js (23 plugins) │  Modular feature system
 ├─────────────────────────────────────┤
 │       lib/classes/*.js              │  Entity, Block, Item, Window, Registry
 ├─────────────────────────────────────┤
@@ -171,6 +171,9 @@ bot.on('spawn', () => {
 | `sound` | Sound event handling |
 | `creative` | Creative mode inventory actions |
 | `resource_pack` | Resource pack response handling |
+| `auto_eat` *(opt-in)* | Automatically eat food when hungry |
+| `collect_block` *(opt-in)* | Pathfind to and collect target blocks |
+| `guard` *(opt-in)* | Guard a position and attack nearby hostiles |
 
 ---
 

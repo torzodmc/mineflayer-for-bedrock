@@ -40,7 +40,6 @@ const soundPlugin = require('./lib/plugins/sound')
 const creativePlugin = require('./lib/plugins/creative')
 const resourcePackPlugin = require('./lib/plugins/resource_pack')
 const pathfinderPlugin = require('./lib/plugins/pathfinder')
-const recipesPlugin = require('./lib/plugins/recipes')
 const Registry = require('./lib/classes/Registry')
 
 const internalPlugins = [
@@ -63,8 +62,7 @@ const internalPlugins = [
     soundPlugin,
     creativePlugin,
     resourcePackPlugin,
-    pathfinderPlugin,
-    recipesPlugin
+    pathfinderPlugin
 ]
 
 /**

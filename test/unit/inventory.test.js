@@ -131,13 +131,15 @@ describe('Furnace', () => {
 
     it('should track fuel/progress from updateData', () => {
         const furnace = new Furnace(1)
-        furnace.updateData(1, 200) // max fuel = 200
-        furnace.updateData(0, 100) // current fuel = 100
+        furnace.updateData(2, 200) // MAX_FUEL_TIME = 200
+        furnace.updateData(1, 100) // REMAINING_FUEL_TIME = 100
         expect(furnace.fuel).toBeCloseTo(0.5)
 
-        furnace.updateData(3, 200) // max progress = 200
-        furnace.updateData(2, 150) // current progress = 150
+        furnace.updateData(0, 150) // SMELT_PROGRESS = 150
         expect(furnace.progress).toBeCloseTo(0.75)
+
+        furnace.updateData(3, 10) // STORED_XP = 10
+        expect(furnace.xp).toBe(10)
     })
 })
 
@@ -148,7 +150,7 @@ describe('Inventory Plugin', () => {
         bot = createMockBot()
     })
 
-    it('should initialize with 41 inventory slots', () => {
+    it('should initialize with 41 inventory slots (36 main + 4 armor + 1 offhand)', () => {
         expect(bot.inventory.slots.length).toBe(41)
     })
 
@@ -160,7 +162,8 @@ describe('Inventory Plugin', () => {
         ]
 
         bot.client.emit('inventory_content', {
-            window_id: 'inventory',
+            container: { container_id: 'inventory' },
+            window_id: 0,
             input: items
         })
 
@@ -176,7 +179,8 @@ describe('Inventory Plugin', () => {
         bot.on('updateSlot', handler)
 
         bot.client.emit('inventory_slot', {
-            window_id: 'inventory',
+            container: { container_id: 'inventory' },
+            window_id: 0,
             slot: 3,
             item: { network_id: 10, count: 5, metadata: 0 }
         })

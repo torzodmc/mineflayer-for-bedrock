@@ -35,26 +35,41 @@ module.exports = myPlugin;
 
 ### Internal Plugins (built into the framework)
 
-Add your plugin to the `internalPlugins` array in `index.js`:
+All 20 internal plugins are listed in `index.js` and loaded automatically:
 
 ```javascript
-const myPlugin = require('./lib/plugins/myPlugin');
-
 const internalPlugins = [
-    chatPlugin,
-    healthPlugin,
-    myPlugin    // ← Add here
+    chatPlugin, healthPlugin, entitiesPlugin, worldPlugin,
+    physicsPlugin, controlsPlugin, inventoryPlugin, windowsPlugin,
+    diggingPlugin, placingPlugin, combatPlugin, craftingPlugin,
+    vehiclesPlugin, sleepPlugin, timePlugin, scoreboardPlugin,
+    soundPlugin, creativePlugin, resourcePackPlugin, pathfinderPlugin
 ];
 ```
 
-### External Plugins (user-created)
+### Ecosystem Plugins (opt-in)
 
-Users load plugins after creating the bot:
+Three extra plugins are exported but not auto-loaded. Load them manually:
+
+```javascript
+const bedrockflayer = require('bedrockflayer');
+const bot = bedrockflayer.createBot({ ... });
+
+bot.loadPlugin(bedrockflayer.autoEat);
+bot.loadPlugin(bedrockflayer.collectBlock);
+bot.loadPlugin(bedrockflayer.guard);
+```
+
+### External / User Plugins
 
 ```javascript
 const bot = bedrockflayer.createBot({ ... });
-bot.loadPlugin(require('bedrockflayer-my-plugin'));
+bot.loadPlugin(require('./myPlugin'));
+// or
+bot.loadPlugins([pluginA, pluginB]);
 ```
+
+---
 
 ## Conventions
 
@@ -107,6 +122,8 @@ bot.client.queue('text', {
 });
 ```
 
+---
+
 ## Testing Plugins
 
 Create a mock bot using EventEmitter for unit testing:
@@ -120,7 +137,7 @@ function createMockBot() {
     const bot = new EventEmitter();
     bot.client = new EventEmitter();
     bot.client.queue = vi.fn();
-    bot._runtimeEntityId = 1;
+    bot._runtimeEntityId = 1n;
     bot.username = 'TestBot';
     myPlugin(bot);
     return bot;
@@ -137,19 +154,38 @@ it('should handle some_packet', () => {
 });
 ```
 
-## Reference: Internal Plugins
+---
 
-| Plugin File | Namespace | Key Events |
-|-------------|-----------|------------|
-| `chat.js` | `bot.chat()`, `bot.whisper()`, `bot.addChatPattern()` | `chat`, `whisper`, `message`, `title` |
-| `health.js` | `bot.health`, `bot.food`, `bot.experience`, `bot.players` | `health`, `death`, `breath`, `experience`, `playerJoined` |
-| `world.js` (Sprint 2) | `bot.world`, `bot.blockAt()`, `bot.findBlocks()` | `chunkColumnLoad`, `blockUpdate` |
-| `entities.js` (Sprint 2) | `bot.entities`, `bot.nearestEntity()` | `entitySpawn`, `entityMoved`, `entityGone` |
-| `controls.js` (Sprint 3) | `bot.setControlState()`, `bot.look()`, `bot.lookAt()` | — |
-| `physics.js` (Sprint 3) | `bot.physicsEnabled`, `bot.physics` | `physicsTick`, `move` |
-| `inventory.js` (Sprint 4) | `bot.inventory`, `bot.heldItem`, `bot.equip()` | `heldItemChanged` |
-| `windows.js` (Sprint 4) | `bot.openContainer()`, `bot.openFurnace()` | `windowOpen`, `windowClose` |
-| `combat.js` (Sprint 5) | `bot.attack()`, `bot.activateItem()` | — |
-| `digging.js` (Sprint 5) | `bot.dig()`, `bot.canDigBlock()` | `diggingCompleted`, `diggingAborted` |
-| `placing.js` (Sprint 5) | `bot.placeBlock()` | — |
-| `crafting.js` (Sprint 6) | `bot.craft()`, `bot.recipesFor()` | — |
+## Reference: All Internal Plugins
+
+| Plugin File | Key Properties / Methods | Key Events Emitted |
+|-------------|--------------------------|-------------------|
+| `chat.js` | `bot.chat()`, `bot.whisper()`, `bot.addChatPattern()`, `bot.awaitMessage()` | `chat`, `whisper`, `message`, `actionBar`, `title` |
+| `health.js` | `bot.health`, `bot.food`, `bot.experience`, `bot.players`, `bot.respawn()` | `health`, `death`, `breath`, `experience`, `playerJoined`, `playerLeft` |
+| `entities.js` | `bot.entities`, `bot.nearestEntity()` | `entitySpawn`, `entityMoved`, `entityGone`, `entityEquipped` |
+| `world.js` | `bot.world`, `bot.blockAt()`, `bot.findBlocks()`, `bot.waitForChunksToLoad()` | `chunkColumnLoad`, `blockUpdate` |
+| `controls.js` | `bot.setControlState()`, `bot.clearControlStates()`, `bot.look()`, `bot.lookAt()` | — |
+| `physics/engine.js` | `bot.physics`, `bot.entity.position/velocity` | `physicsTick`, `move` |
+| `inventory.js` | `bot.inventory`, `bot.heldItem`, `bot.equip()`, `bot.toss()`, `bot.unequip()` | `heldItemChanged`, `inventoryUpdated` |
+| `windows.js` | `bot.currentWindow`, `bot.openChest()`, `bot.openFurnace()`, `bot.closeWindow()` | `windowOpen`, `windowClose` |
+| `digging.js` | `bot.dig()`, `bot.stopDigging()`, `bot.canDigBlock()` | `diggingCompleted`, `diggingAborted` |
+| `placing.js` | `bot.placeBlock()`, `bot.activateBlock()` | — |
+| `combat.js` | `bot.attack()`, `bot.activateItem()`, `bot.deactivateItem()` | — |
+| `crafting.js` | `bot.craft()` | — |
+| `recipes.js` | `bot.recipesFor()`, `bot.recipes` | `recipesLoaded` |
+| `pathfinder.js` | `bot.pathfinder.goto()`, `bot.pathfinder.stop()` | `path_update`, `goal_reached`, `path_reset` |
+| `vehicles.js` | `bot.mount()`, `bot.dismount()`, `bot.vehicle` | `mount`, `dismount` |
+| `sleep.js` | `bot.sleep()`, `bot.wake()`, `bot.isSleeping` | `sleep`, `wake` |
+| `time.js` | `bot.time.timeOfDay`, `bot.time.day`, `bot.time.isDay` | `time` |
+| `scoreboard.js` | `bot.scoreboards`, `bot.scoreboard` | `scoreboardCreated`, `scoreUpdated` |
+| `sound.js` | — | `soundEffectHeard` |
+| `creative.js` | `bot.creative.setInventorySlot()`, `bot.creative.flyTo()` | — |
+| `resource_pack.js` | — (auto-accepts packs) | — |
+
+## Reference: Ecosystem Plugins (opt-in)
+
+| Plugin File | Key Methods | Description |
+|-------------|-------------|-------------|
+| `auto_eat.js` | `bot.autoEat.enable()`, `bot.autoEat.disable()` | Automatically eats food when hungry |
+| `collect_block.js` | `bot.collectBlock.collect()` | Pathfinds to and collects a target block |
+| `guard.js` | `bot.guard.start()`, `bot.guard.stop()` | Guards a position, attacks nearby hostiles |
